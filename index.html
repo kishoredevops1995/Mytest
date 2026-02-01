@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My First Project</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel">
+        const { useState, useRef } = React;
+
+        function App() {
+            const [showCongrats, setShowCongrats] = useState(false);
+            const [noButtonPosition, setNoButtonPosition] = useState({ 
+                top: '50%', 
+                left: '50%'
+            });
+            const noButtonRef = useRef(null);
+
+            const handleYesClick = () => {
+                setShowCongrats(true);
+            };
+
+            const handleNoMouseEnter = () => {
+                const button = noButtonRef.current;
+                if (!button) return;
+
+                const buttonRect = button.getBoundingClientRect();
+                const buttonWidth = buttonRect.width;
+                const buttonHeight = buttonRect.height;
+                
+                const maxX = window.innerWidth - buttonWidth;
+                const maxY = window.innerHeight - buttonHeight;
+
+                const newLeft = Math.random() * maxX;
+                const newTop = Math.random() * maxY;
+
+                setNoButtonPosition({ top: `${newTop}px`, left: `${newLeft}px` });
+            };
+
+            if (showCongrats) {
+                return (
+                    <div style={styles.congratsContainer}>
+                        <h1 style={styles.congratsText}>🎉 Congratulations for the first project! 🎉</h1>
+                    </div>
+                );
+            }
+
+            return (
+                <div style={styles.container}>
+                    <h1 style={styles.question}>Is this my first project?</h1>
+                    <div style={styles.buttonContainer}>
+                        <button 
+                            style={styles.yesButton}
+                            onClick={handleYesClick}
+                        >
+                            Yes
+                        </button>
+                        <button 
+                            ref={noButtonRef}
+                            style={{
+                                ...styles.noButton,
+                                top: noButtonPosition.top,
+                                left: noButtonPosition.left,
+                            }}
+                            onMouseEnter={handleNoMouseEnter}
+                        >
+                            No
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        const styles = {
+            container: {
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: '100vh',
+                backgroundColor: '#f0f8ff',
+                fontFamily: 'Arial, sans-serif',
+                position: 'relative',
+                overflow: 'hidden'
+            },
+            question: {
+                fontSize: '2.5rem',
+                color: '#333',
+                marginBottom: '50px',
+                textAlign: 'center',
+                padding: '0 20px'
+            },
+            buttonContainer: {
+                display: 'flex',
+                gap: '20px',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '100%',
+                position: 'relative',
+                height: '100px'
+            },
+            yesButton: {
+                padding: '15px 40px',
+                fontSize: '1.2rem',
+                backgroundColor: '#4CAF50',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                transition: 'background-color 0.3s',
+                boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+                fontWeight: 'bold',
+                position: 'absolute',
+                left: '50%',
+                top: '50%',
+                transform: 'translate(-150%, -50%)'
+            },
+            noButton: {
+                padding: '15px 40px',
+                fontSize: '1.2rem',
+                backgroundColor: '#f44336',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+                fontWeight: 'bold',
+                position: 'absolute',
+                transition: 'top 0.3s ease, left 0.3s ease',
+                transform: 'translateX(50%)'
+            },
+            congratsContainer: {
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: '100vh',
+                backgroundColor: '#fff3cd',
+                fontFamily: 'Arial, sans-serif'
+            },
+            congratsText: {
+                fontSize: '3rem',
+                color: '#856404',
+                textAlign: 'center',
+                padding: '20px',
+                animation: 'bounce 1s infinite'
+            }
+        };
+
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = `
+            @keyframes bounce {
+                0%, 100% { transform: translateY(0); }
+                50% { transform: translateY(-20px); }
+            }
+            
+            button:hover {
+                filter: brightness(1.1);
+            }
+        `;
+        document.head.appendChild(styleSheet);
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
